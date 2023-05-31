@@ -1,0 +1,137 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>David's Weather App</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+</head>
+
+<body>
+    <header id="header" class="fixed-header">
+        <form id="city-form" method="POST">
+            {% csrf_token %}
+            <input type="text" name="city1" placeholder="Enter city" required>
+            <input type="text" name="city2" placeholder="Enter another city">
+            <button type="submit">Compare</button>
+        </form>
+    </header>
+
+    <div class="container">
+
+        {% if weather_data1 %}
+        <div class="city-container">
+            <h1>{{ weather_data1.city }}</h1>
+            <h2>{{ weather_data1.temperature }}°C</h2>
+            <p>{{ weather_data1.description }}</p>
+
+            <p>Precipitation: {{ weather_data1.precipitation }}%</p>
+            <p>Cloudiness: {{ weather_data1.cloudiness }}%</p>
+
+            <img src="http://openweathermap.org/img/w/{{ weather_data1.icon }}.png" alt="{{ weather_data1.description }}">
+
+            {% if displayed_forecasts1 %}
+            <h2>Forecast</h2>
+            <div class="forecast-container">
+                {% for forecast in displayed_forecasts1 %}
+                <div class="forecast">
+                    <h3>{{ forecast.datetime }}</h3>
+
+                    {% if forecast.temperature.min != forecast.temperature.max %}
+                        <p>{{ forecast.temperature.min }}°C - {{ forecast.temperature.max }}°C</p>
+                    {% else %}
+                        <p>{{ forecast.temperature.min }}°C</p>
+                    {% endif %}
+
+                    <p>Feels like: {{ forecast.feels_like }}°C</p>
+                    <p>{{ forecast.description }}</p>
+                    <img src="https://openweathermap.org/img/w/{{ forecast.icon }}.png" alt="{{ forecast.description }}">
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if weather_data2 %}
+        <div class="city-container">
+            <h1>{{ weather_data2.city }}</h1>
+            <h2>{{ weather_data2.temperature }}°C</h2>
+            <p>{{ weather_data2.description }}</p>
+            <p>Precipitation: {{ weather_data2.precipitation }}%</p>
+            <p>Cloudiness: {{ weather_data2.cloudiness }}%</p>
+            <img src="http://openweathermap.org/img/w/{{ weather_data2.icon }}.png" alt="{{ weather_data2.description }}">
+            {% if displayed_forecasts2 %}
+            <h2>Forecast</h2>
+            <div class="forecast-container">
+                {% for forecast in displayed_forecasts2 %}
+                <div class="forecast">
+                    <h3>{{ forecast.datetime }}</h3>
+
+                    {% if forecast.temperature.min != forecast.temperature.max %}
+                        <p>{{ forecast.temperature.min }}°C - {{ forecast.temperature.max }}°C</p>
+                    {% else %}
+                        <p>{{ forecast.temperature.min }}°C</p>
+                    {% endif %}
+
+                    <p>Feels more like: {{ forecast.feels_like }}°C</p>
+                    <p>{{ forecast.description }}</p>
+                    <img src="https://openweathermap.org/img/w/{{ forecast.icon }}.png" alt="{{ forecast.description }}">
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        window.addEventListener('scroll', function () {
+            const header = document.getElementById('header');
+            if (window.pageYOffset > 0) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
+
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>David's Weather App</title>#}
+{#    <link rel="stylesheet" href="{% static 'style.css' %}">#}
+{#</head>#}
+{#<body>#}
+{#    <header id="header" class="fixed-header">#}
+{#        <form id="city-form" method="POST">#}
+{#            {% csrf_token %}#}
+{#            <input type="text" name="city1" placeholder="Enter city" required>#}
+{#            <input type="text" name="city2" placeholder="Enter another city">#}
+{#            <button type="submit">Compare</button>#}
+{#        </form>#}
+{#    </header>#}
+{##}
+{#    <div class="container">#}
+{#        {% include 'weather_app/city-weather.html' %}#}
+{#    </div>#}
+{##}
+{#    <script>#}
+{#        window.addEventListener('scroll', function () {#}
+{#            const header = document.getElementById('header');#}
+{#            if (window.pageYOffset > 0) {#}
+{#                header.classList.add('scrolled');#}
+{#            } else {#}
+{#                header.classList.remove('scrolled');#}
+{#            }#}
+{#        });#}
+{#    </script>#}
+{#</body>#}
+{#</html>#}
